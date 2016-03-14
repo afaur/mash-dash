@@ -1,0 +1,5 @@
+-cp src
+-lib mithril
+-js build/app.js
+-main basic.Main
+-debug

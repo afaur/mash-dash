@@ -1,0 +1,4 @@
+#!/bin/bash
+
+haxe build.hxml
+nekotools server -d .
