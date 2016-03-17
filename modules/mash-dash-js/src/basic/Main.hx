@@ -2,45 +2,64 @@ package basic;
 
 import mithril.M;
 
-class User implements Model
+class ReferenceDocument implements Model
 {
-	@prop public var name : String;
 
-	public function new(name) {
-		// Using M.prop, this.name is now a method similar to
-		// jQuery's methods. If called with no parameters the
-		// value is returned, otherwise the value is set.
-		this.name = M.prop(name);
+	@prop public var plan_id : Int;
+	@prop public var network_id : Int;
+	@prop public var network_name : String;
+	@prop public var partner_network_code : String;
+
+	public function new(values) {
+		this.plan_id = M.prop(values.plan_id);
+		this.network_id = M.prop(values.network_id);
+		this.network_name = M.prop(values.network_name);
+		this.partner_network_code = M.prop(values.partner_network_code);
 	}
 }
 
 class Main implements Component
 {
-	var user : User;
+	var rdoc : ReferenceDocument;
 
 	public function new() {}
 
 	public function controller() {
-		this.user = new User("Thorin Oakenshield");
+		this.rdoc = new ReferenceDocument({
+			"plan_id": null,
+			"network_id": null,
+			"network_name": "",
+			"partner_network_code": ""
+		});
+	}
+
+	public function formField(field: Dynamic) {
+		return [
+		];
 	}
 
 	public function view() [
-		// Display an input field.
-		INPUT({
-			// Listens to the "oninput" event of the input field and
-			// will set user.name to the field's "value" attribute:
-			oninput: M.withAttr("value", user.name),
-
-			// The redraw triggered by the above event will
-			// update the value from the model automatically:
-			value: user.name()
-		}),
-
-		// Display a div with class .user and some style
-		DIV.user({style: {margin: "15px"}}, user.name())
+		DIV.user({style: {margin: "15px"}}, [
+			LABEL({
+				"for": "plan_id"
+			}, "Plan ID: "),
+			INPUT({
+				oninput: M.withAttr("value", Reflect.field(rdoc, "plan_id")),
+				id: "plan_id",
+				value: Reflect.callMethod(rdoc, Reflect.field(rdoc,"plan_id"), [])
+			}),
+			LABEL({
+				"for": "network_id"
+			}, "Network ID: "),
+			INPUT({
+				oninput: M.withAttr("value", Reflect.field(rdoc, "network_id")),
+				id: "network_id",
+				value: Reflect.callMethod(rdoc, Reflect.field(rdoc,"network_id"), [])
+			})
+		]),
+		DIV.user({style: {margin: "15px"}}, rdoc.plan_id())
 	];
 
-	// Program entry point
 	static function main() {
 		M.mount(js.Browser.document.body, new Main());
 	}

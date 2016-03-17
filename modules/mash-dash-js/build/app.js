@@ -1,10 +1,27 @@
 (function (console) { "use strict";
-var mithril_Model = function() { };
-var basic_User = function(name) {
-	this.name = m.prop(null);
-	this.name = m.prop(name);
+var Reflect = function() { };
+Reflect.field = function(o,field) {
+	try {
+		return o[field];
+	} catch( e ) {
+		return null;
+	}
 };
-basic_User.__interfaces__ = [mithril_Model];
+Reflect.callMethod = function(o,func,args) {
+	return func.apply(o,args);
+};
+var mithril_Model = function() { };
+var basic_ReferenceDocument = function(values) {
+	this.partner_network_code = m.prop(null);
+	this.network_name = m.prop(null);
+	this.network_id = m.prop(null);
+	this.plan_id = m.prop(null);
+	this.plan_id = m.prop(values.plan_id);
+	this.network_id = m.prop(values.network_id);
+	this.network_name = m.prop(values.network_name);
+	this.partner_network_code = m.prop(values.partner_network_code);
+};
+basic_ReferenceDocument.__interfaces__ = [mithril_Model];
 var mithril_Component = function() { };
 var basic_Main = function() {
 };
@@ -17,11 +34,14 @@ basic_Main.prototype = {
 		if(m.__haxecomponents.length && !$bind(this,this.controller)) {
 			return m.__haxecomponents.pop().controller();
 		}
-		this.user = new basic_User("Thorin Oakenshield");
+		this.rdoc = new basic_ReferenceDocument({ 'plan_id' : null, 'network_id' : null, 'network_name' : "", 'partner_network_code' : ""});
 		return this;
 	}
+	,formField: function(field) {
+		return [];
+	}
 	,view: function() {
-		return [m.m("INPUT",{ oninput : m.withAttr("value",this.user.name), value : this.user.name()}),m.m("DIV.user",{ style : { margin : "15px"}},this.user.name())];
+		return [m.m("DIV.user",{ style : { margin : "15px"}},[m.m("LABEL",{ 'for' : "plan_id"},"Plan ID: "),m.m("INPUT",{ oninput : m.withAttr("value",Reflect.field(this.rdoc,"plan_id")), id : "plan_id", value : Reflect.callMethod(this.rdoc,Reflect.field(this.rdoc,"plan_id"),[])}),m.m("LABEL",{ 'for' : "network_id"},"Network ID: "),m.m("INPUT",{ oninput : m.withAttr("value",Reflect.field(this.rdoc,"network_id")), id : "network_id", value : Reflect.callMethod(this.rdoc,Reflect.field(this.rdoc,"network_id"),[])})]),m.m("DIV.user",{ style : { margin : "15px"}},this.rdoc.plan_id())];
 	}
 };
 var mithril_View = function() { };
@@ -74,7 +94,7 @@ var __varName1 = GLOBAL.m;
 			if (typeof module !== 'undefined' && module.exports) m.request = function(xhrOptions) { return m.deferred().promise; };
 		})(__varName1);
 } catch(_) {}
-basic_User.__meta__ = { fields : { name : { prop : null}}};
+basic_ReferenceDocument.__meta__ = { fields : { plan_id : { prop : null}, network_id : { prop : null}, network_name : { prop : null}, partner_network_code : { prop : null}}};
 basic_Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}});
 
